@@ -51,9 +51,15 @@ async function run() {
                 .message()
                 .seed(process.env.NONSECURE_USE_OF_DEVELOPMENT_SEED_1);
             let input_balance = 0
+            let counter = 0;
             for (input of inputs) {
                 input_balance += input.amount;
                 messageBuilder = messageBuilder.input(input.transactionId, input.outputIndex)
+                counter++;
+                // Max inputs is 127
+                if (counter > 126) {
+                    break
+                }
             }
             if (input_balance - amount != 0 && inputs.length > 1) {
                 messageBuilder = messageBuilder.output(addresses[0], input_balance - amount)
